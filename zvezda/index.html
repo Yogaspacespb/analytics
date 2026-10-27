@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ставка «Звезда» для преподавателей студии СПб</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=PT+Serif&display=swap">
+<style>:root{color-scheme:light;
+  --color-fg:#3F4826; --color-fg-muted:#6F7656; --color-bg:#FDF6F0; --color-panel:#FFFFFF; --color-border-line:#E6DDD3;
+  --color-ok:#5C6937; --color-warn:#C8641E; --color-bad:#C0392B;
+  --font-anthropic-sans:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif; --font-anthropic-serif:"PT Serif",Georgia,serif;
+  --cds-gap-xs:6px; --cds-gap-sm:10px; --cds-gap-md:16px; --cds-gap-lg:28px; --cds-pad-xs:4px; --cds-pad-sm:8px; --cds-pad-lg:20px;
+  --cds-radius:12px; --cds-font-size-caption:12.5px; --cds-font-size-body:14px; --cds-font-size-heading:17px; --cds-font-size-title:30px;
+  --cds-font-weight-medium:600; --cds-text-secondary:#6F7656; --cds-surface-popover:#FFFFFF; --cds-border:#E6DDD3;
+  --cds-shadow-popover:0 6px 20px rgba(63,72,38,.15); --cds-chart-axis:#CFC7BC; --cds-chart-grid:#EFE7DE; --cds-chart-reference:#6F7656; --cds-dur-slow:.3s}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --color-fg:#EDE6DC; --color-fg-muted:#B9B6A6; --color-bg:#1C2016; --color-panel:#252A1D; --color-border-line:#3A4130;
+  --cds-text-secondary:#B9B6A6; --cds-surface-popover:#2C3223; --cds-border:#3A4130; --cds-chart-axis:#4A5240; --cds-chart-grid:#2C3223; --cds-chart-reference:#B9B6A6}}
+html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px}
+#dash-root{padding:28px 16px 56px}
+.dash-skeleton{color:var(--color-fg-muted)}</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script type="text/csv" id="ds-kazakova_classes">date,month,time,hall,class_name,people,revenue
+2025-10-09,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,5,1250
+2025-10-13,2025-10,13:00,Галактика,Виньяса Флоу. Все уровни,5,3650
+2025-10-14,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,6,3650
+2025-10-16,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,4,3445
+2025-10-21,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,10,11517
+2025-10-22,2025-10,13:00,Галактика,Виньяса Флоу. Все уровни,4,5000
+2025-10-23,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,2,2300
+2025-10-25,2025-10,13:30,Галактика,Виньяса Флоу. Все уровни,4,2400
+2025-10-27,2025-10,13:00,Галактика,Виньяса Флоу. Все уровни,1,1150
+2025-10-28,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,6,3550
+2025-10-29,2025-10,13:00,Галактика,Виньяса Флоу. Все уровни,4,2550
+2025-10-30,2025-10,19:00,Галактика,Виньяса Флоу. Все уровни,6,5845
+2025-11-03,2025-11,13:00,Галактика,Виньяса Флоу. Все уровни,4,0
+2025-11-04,2025-11,19:00,Галактика,Виньяса Флоу. Все уровни,4,4853
+2025-11-05,2025-11,13:00,Галактика,Виньяса Флоу. Все уровни,3,2550
+2025-11-06,2025-11,19:00,Галактика,Виньяса Флоу. Все уровни,9,8800
+2025-11-08,2025-11,14:00,Галактика,Виньяса Флоу. Все уровни,13,9900
+2025-11-08,2025-11,17:30,Галактика,Виньяса Флоу. Все уровни,7,3603
+2025-11-10,2025-11,13:00,Галактика,Виньяса Флоу. Все уровни,6,4700
+2025-11-11,2025-11,19:00,Галактика,Виньяса Флоу. Все уровни,3,3708
+2025-11-12,2025-11,13:00,Галактика,Виньяса Флоу. Все уровни,4,2500
+2025-11-13,2025-11,19:00,Галактика,Виньяса Флоу. Все уровни,8,5850
+2025-11-15,2025-11,13:30,Галактика,Виньяса Флоу. Все уровни,5,5100
+2025-11-17,2025-11,13:00,Галактика,Виньяса Флоу. Все уровни,4,3908
+2025-11-18,2025-11,19:00,Галактика,Виньяса Флоу. Все уровни,9,7500
+2025-11-19,2025-11,13:00,Галактика,Виньяса Флоу. Все уровни,2,2300
+2025-11-20,2025-11,19:00,Галактика,Виньяса Флоу. Все уровни,11,8450
+2025-12-01,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,5,5050
+2025-12-02,2025-12,19:00,Галактика,Виньяса Флоу. Все уровни,13,11000
+2025-12-06,2025-12,13:30,Галактика,Виньяса Флоу. Все уровни,9,6050
+2025-12-08,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,3,2558
+2025-12-09,2025-12,19:00,Галактика,Виньяса Флоу. Все уровни,2,2300
+2025-12-10,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,6,5845
+2025-12-11,2025-12,19:00,Галактика,Виньяса Флоу. Все уровни,13,10250
+2025-12-13,2025-12,13:30,Галактика,Виньяса Флоу. Все уровни,8,8245
+2025-12-15,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,4,4800
+2025-12-16,2025-12,19:00,Галактика,Виньяса Флоу. Все уровни,6,6050
+2025-12-17,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,3,3445
+2025-12-18,2025-12,19:00,Галактика,Виньяса Флоу. Все уровни,6,7300
+2025-12-20,2025-12,13:30,Галактика,Виньяса Флоу. Все уровни,5,5945
+2025-12-22,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,3,3450
+2025-12-23,2025-12,19:00,Галактика,Виньяса Флоу. Все уровни,11,12145
+2025-12-27,2025-12,13:30,Галактика,Виньяса Флоу. Все уровни,7,6095
+2025-12-29,2025-12,13:00,Галактика,Виньяса Флоу. Все уровни,2,2808
+2026-01-05,2026-01,13:00,Марс,Виньяса Флоу. Все уровни,8,7450
+2026-01-06,2026-01,12:00,Марс,Виньяса Флоу. Все уровни,6,3845
+2026-01-17,2026-01,13:30,Галактика,Виньяса Флоу. Все уровни,9,7350
+2026-01-22,2026-01,19:00,Галактика,Виньяса Флоу. Все уровни,16,13695
+2026-01-24,2026-01,13:30,Галактика,Виньяса Флоу. Все уровни,5,4490
+2026-01-26,2026-01,13:00,Галактика,Виньяса Флоу. Все уровни,3,3650
+2026-01-27,2026-01,19:00,Галактика,Виньяса Флоу. Все уровни,10,8390
+2026-01-28,2026-01,13:00,Галактика,Виньяса Флоу. Все уровни,6,5745
+2026-01-29,2026-01,19:00,Галактика,Виньяса Флоу. Все уровни,10,10790
+2026-02-02,2026-02,13:00,Галактика,Виньяса Флоу. Все уровни,1,1250
+2026-02-03,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,5,5640
+2026-02-04,2026-02,13:00,Галактика,Виньяса Флоу. Все уровни,7,7100
+2026-02-05,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,7,8645
+2026-02-07,2026-02,13:30,Галактика,Виньяса Флоу. Все уровни,5,6150
+2026-02-09,2026-02,13:00,Галактика,Виньяса Флоу. Все уровни,3,2400
+2026-02-10,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,9,8293
+2026-02-11,2026-02,13:00,Галактика,Виньяса Флоу. Все уровни,6,4600
+2026-02-12,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,8,7200
+2026-02-14,2026-02,13:30,Галактика,Виньяса Флоу. Все уровни,3,2090
+2026-02-17,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,13,12235
+2026-02-18,2026-02,13:00,Галактика,Виньяса Флоу. Все уровни,4,3550
+2026-02-19,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,12,10735
+2026-02-21,2026-02,13:30,Галактика,Виньяса Флоу. Все уровни,14,13645
+2026-02-24,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,11,13083
+2026-02-25,2026-02,13:00,Галактика,Виньяса Флоу. Все уровни,4,3650
+2026-02-26,2026-02,19:00,Галактика,Виньяса Флоу. Все уровни,15,16535
+2026-02-27,2026-02,20:00,Марс,Инь йога. Все уровни,12,11985
+2026-02-28,2026-02,13:30,Галактика,Виньяса Флоу. Все уровни,9,9850
+2026-03-03,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,18,20206
+2026-03-04,2026-03,13:00,Галактика,Виньяса Флоу. Все уровни,6,6250
+2026-03-05,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,16,16003
+2026-03-07,2026-03,13:30,Галактика,Виньяса Флоу. Все уровни,13,14440
+2026-03-09,2026-03,13:30,Марс,Виньяса Флоу. Все уровни,12,8858
+2026-03-10,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,9,8656
+2026-03-11,2026-03,13:00,Галактика,Виньяса Флоу. Все уровни,3,3550
+2026-03-12,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,13,14757
+2026-03-14,2026-03,13:30,Галактика,Виньяса Флоу. Все уровни,10,10598
+2026-03-17,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,11,10598
+2026-03-18,2026-03,13:00,Галактика,Виньяса Флоу. Все уровни,7,7158
+2026-03-19,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,13,15552
+2026-03-21,2026-03,13:30,Галактика,Виньяса Флоу. Все уровни,14,15546
+2026-03-24,2026-03,19:00,Галактика,Виньяса Флоу. Все уровни,24,23310
+2026-03-25,2026-03,13:00,Галактика,Виньяса Флоу. Все уровни,6,6200
+2026-04-04,2026-04,13:30,Галактика,Виньяса Флоу. Все уровни,20,21411
+2026-04-07,2026-04,19:00,Галактика,Виньяса Флоу. Все уровни,11,13817
+2026-04-08,2026-04,13:00,Галактика,Виньяса Флоу. Все уровни,10,10117
+2026-04-09,2026-04,19:00,Галактика,Виньяса Флоу. Все уровни,21,20653
+2026-04-11,2026-04,14:00,Галактика,Виньяса Флоу. Все уровни,24,21556
+2026-04-28,2026-04,19:00,Галактика,Виньяса Флоу. Все уровни,11,12298
+2026-04-29,2026-04,13:00,Галактика,Виньяса Флоу. Все уровни,7,8898
+2026-04-30,2026-04,19:00,Галактика,Виньяса Флоу. Все уровни,13,15738
+2026-05-02,2026-05,14:00,Галактика,Виньяса Флоу. Все уровни,21,20083
+2026-05-05,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,17,17098
+2026-05-06,2026-05,13:00,Галактика,Виньяса Флоу. Все уровни,6,6253
+2026-05-07,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,25,22048
+2026-05-09,2026-05,14:00,Галактика,Виньяса Флоу. Все уровни,14,15598
+2026-05-11,2026-05,12:00,Галактика,Виньяса Флоу. Все уровни,16,14698
+2026-05-12,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,16,17846
+2026-05-13,2026-05,13:00,Галактика,Виньяса Флоу. Все уровни,11,11206
+2026-05-14,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,21,17040
+2026-05-16,2026-05,14:00,Галактика,Виньяса Флоу. Все уровни,11,11488
+2026-05-19,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,13,14243
+2026-05-20,2026-05,13:00,Галактика,Виньяса Флоу. Все уровни,4,4961
+2026-05-21,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,21,21173
+2026-05-23,2026-05,14:00,Галактика,Виньяса Флоу. Все уровни,16,18596
+2026-05-26,2026-05,19:00,Галактика,Виньяса Флоу. Все уровни,20,17148
+2026-06-04,2026-06,19:00,Галактика,Виньяса Флоу. Все уровни,18,21986
+2026-06-05,2026-06,19:00,Галактика,Виньяса Флоу. Все уровни,7,6111
+2026-06-06,2026-06,14:00,Галактика,Виньяса Флоу. Все уровни,15,15756
+2026-06-09,2026-06,19:00,Галактика,Виньяса Флоу. Все уровни,23,24987
+2026-06-23,2026-06,19:00,Галактика,Виньяса Флоу. Все уровни,15,17487
+2026-06-24,2026-06,13:00,Галактика,Виньяса Флоу. Все уровни,6,6914
+2026-06-25,2026-06,19:00,Галактика,Виньяса Флоу. Все уровни,27,31744
+2026-06-27,2026-06,14:00,Галактика,Виньяса Флоу. Все уровни,13,13376
+2026-06-30,2026-06,19:00,Галактика,Виньяса Флоу. Все уровни,22,25707
+2026-07-01,2026-07,13:00,Галактика,Виньяса Флоу. Все уровни,4,4314
+2026-07-02,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,21,22578
+2026-07-04,2026-07,14:00,Галактика,Виньяса Флоу. Все уровни,16,14247
+2026-07-07,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,15,18325
+2026-07-08,2026-07,13:00,Галактика,Виньяса Флоу. Все уровни,12,11567
+2026-07-09,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,16,18720
+2026-07-11,2026-07,14:00,Галактика,Виньяса Флоу. Все уровни,12,15262
+2026-07-14,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,24,29123
+2026-07-15,2026-07,13:00,Галактика,Виньяса Флоу. Все уровни,8,9109
+2026-07-16,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,23,24723
+2026-07-18,2026-07,14:00,Галактика,Виньяса Флоу. Все уровни,11,11896
+2026-07-21,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,24,25523
+2026-07-23,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,27,27363
+2026-07-30,2026-07,19:00,Галактика,Виньяса Флоу. Все уровни,15,15123
+2026-08-01,2026-08,14:00,Галактика,Виньяса Флоу. Все уровни,14,16925
+2026-08-18,2026-08,15:00,Галактика,Дживамукти Йога. Духовный воин. Все уровни,8,8867
+2026-08-18,2026-08,19:00,Галактика,Виньяса Флоу. Все уровни,15,14512
+2026-08-19,2026-08,13:00,Галактика,Виньяса Флоу. Все уровни,8,10162
+2026-08-20,2026-08,19:00,Галактика,Виньяса Флоу. Все уровни,24,25773
+2026-08-22,2026-08,14:00,Галактика,Виньяса Флоу. Все уровни,13,11893
+2026-08-25,2026-08,19:00,Галактика,Виньяса Флоу. Все уровни,18,19318
+2026-08-26,2026-08,13:00,Галактика,Виньяса Флоу. Все уровни,6,4850
+2026-08-27,2026-08,19:00,Галактика,Виньяса Флоу. Все уровни,22,23510
+2026-08-29,2026-08,10:00,Марс,Дживамукти Йога. Духовный воин. Все уровни,7,8017
+2026-08-29,2026-08,14:00,Галактика,Виньяса Флоу. Все уровни,16,18925
+2026-08-31,2026-08,20:00,Марс,Инь йога. Все уровни,11,13181
+2026-09-01,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,20,22086
+2026-09-02,2026-09,13:00,Галактика,Виньяса Флоу. Все уровни,3,3456
+2026-09-03,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,27,30274
+2026-09-05,2026-09,14:00,Галактика,Виньяса Флоу. Все уровни,14,16046
+2026-09-08,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,27,31744
+2026-09-09,2026-09,13:00,Галактика,Виньяса Флоу. Все уровни,7,6762
+2026-09-10,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,16,18149
+2026-09-12,2026-09,14:00,Галактика,Виньяса Флоу. Все уровни,14,14293
+2026-09-15,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,23,27103
+2026-09-16,2026-09,13:00,Галактика,Виньяса Флоу. Все уровни,7,7603
+2026-09-17,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,16,17737
+2026-09-19,2026-09,14:00,Галактика,Виньяса Флоу. Все уровни,15,15396
+2026-09-22,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,28,27762
+2026-09-23,2026-09,15:00,Марс,Дживамукти Йога. Духовный воин. Все уровни,6,4598
+2026-09-24,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,19,21541
+2026-09-29,2026-09,19:00,Галактика,Виньяса Флоу. Все уровни,25,26238
+2026-09-30,2026-09,15:00,Марс,Дживамукти Йога. Духовный воин. Все уровни,5,6011
+2026-10-01,2026-10,19:00,Галактика,Виньяса Флоу. Все уровни,16,17502
+2026-10-03,2026-10,14:00,Галактика,Виньяса Флоу. Все уровни,17,17901
+2026-10-20,2026-10,19:00,Галактика,Виньяса Флоу. Все уровни,23,23897
+2026-10-21,2026-10,15:00,Марс,Дживамукти Йога. Духовный воин. Все уровни,7,6148
+</script>
+<script type="text/csv" id="ds-rates">scheme,label,city,base,threshold,per_head
+spb_std,СПб стандарт,СПб,2000,5,250
+spb_star350,СПб «Звезда» 350,СПб,2000,5,350
+spb_star400,СПб «Звезда» 400,СПб,2000,5,400
+spb_star450,СПб «Звезда» 450,СПб,2000,5,450
+msk_std,Москва стандарт,Москва,1500,5,400
+msk_star,Москва «Звезда»,Москва,0,0,500
+spb_star400_nobase,СПб «Звезда» 400 без базы,СПб,0,0,400
+</script>
+<script>
+(function(){
+  const raw = {}, calcs = {}, cache = {}, subs = [];
+  document.querySelectorAll('script[type="text/csv"][id^="ds-"]').forEach(s => { raw[s.id.slice(3)] = d3.csvParse(s.textContent.trim()); });
+  function rows(id){
+    if (id in raw) return raw[id];
+    if (id in cache) return cache[id];
+    const c = calcs[id]; if (!c) return null;
+    return cache[id] = c.fn(...c.inputs.map(rows));
+  }
+  window.dash = {
+    data(id){ try { const d = rows(id); return d ? {status:'ok', data:d, rows:d, columns: d.columns || (d[0] ? Object.keys(d[0]) : []), refreshing:false, meta:[]} : {status:'missing', data:[], rows:[], columns:[], meta:[]}; }
+              catch(e){ console.error(e); return {status:'error', data:[], rows:[], columns:[], message:String(e), meta:[]}; } },
+    calc(id, spec){ calcs[id] = spec; },
+    loader(){}, refresh(){}, params(){ return {}; }, setParams(){}, resetParams(){}, setLink(){},
+    colors: ['#5C6937','#F0803B','#A2B9C9','#7C8760','#CB6D33','#AEB49C','#9b89c4','#c8956a'],
+    onData(fn){ subs.push(fn); fn(); }
+  };
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => subs.forEach(f => f()), 150); });
+})();
+</script>
+</head><body><div id="dash-root">
+<style>
+.zv { --zv-std: #A5A09D; --zv-star: #F0803B; --zv-msk: #7C8760; --zv-pill: #FDE6D9; --zv-pill-fg: #CB6D33;
+  display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); max-width: 72rem; margin-inline: auto; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .zv { --zv-std: #8E8985; --zv-star: #F49A60; --zv-msk: #AEB49C; --zv-pill: #4A3426; --zv-pill-fg: #F9C1A0; } }
+:root[data-theme="dark"] .zv { --zv-std: #8E8985; --zv-star: #F49A60; --zv-msk: #AEB49C; --zv-pill: #4A3426; --zv-pill-fg: #F9C1A0; }
+.zv-head { display: grid; gap: var(--cds-gap-xs); }
+.zv-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.zv-lede { margin: 0; color: var(--color-fg-muted); max-width: 62ch; line-height: 1.5; }
+.zv-lede b { color: var(--color-fg); font-weight: 600; }
+.zv-window { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.zv-tiles { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.zv-tile, .zv-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+.zv-tile { display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.zv-tile-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.zv-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.zv-big.zv-accent { color: var(--zv-star); }
+.zv-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.zv-grid { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); }
+.zv-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.zv-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: var(--cds-gap-xs) 0 var(--cds-gap-md); line-height: 1.45; }
+.zv-chart { position: relative; min-height: 260px; }
+.zv-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); }
+.zv-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.zv-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.zv-legend i.zv-line { height: 2px; border-radius: 1px; width: 14px; }
+.zv-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; white-space: nowrap; z-index: 2; }
+.zv-tip .zv-tip-h { color: var(--cds-text-secondary); margin-bottom: 2px; }
+.zv-tip .zv-row { display: flex; align-items: center; gap: 6px; }
+.zv-tip .zv-row i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+.zv-tablewrap { overflow-x: auto; }
+.zv-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: var(--cds-font-size-body); }
+.zv-table th { text-align: right; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); }
+.zv-table th:first-child, .zv-table td:first-child { text-align: left; }
+.zv-table td { text-align: right; padding: var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.zv-table tr.zv-rec td { background: var(--zv-pill); }
+.zv-table tr.zv-sel td { font-weight: 600; }
+.zv-table tr.zv-sel td:first-child { box-shadow: inset 3px 0 0 var(--zv-star); }
+.zv-pill { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--zv-pill); color: var(--zv-pill-fg); font-size: var(--cds-font-size-caption); }
+.zv-table tr.zv-rec .zv-pill { background: var(--color-panel); }
+.zv-switch { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); padding: 4px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; width: fit-content; max-width: 100%; }
+.zv-switch button { font: inherit; font-size: var(--cds-font-size-body); border: 0; background: transparent; color: var(--color-fg-muted); padding: 6px 14px; border-radius: 999px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.zv-switch button:hover { color: var(--color-fg); }
+.zv-switch button[aria-pressed="true"] { background: var(--zv-star); color: #fff; }
+.zv-switch button:focus-visible { outline: 2px solid var(--zv-star); outline-offset: 2px; }
+.zv-formula { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.zv-warn { color: var(--color-warn); }
+.zv-foot { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; max-width: 80ch; margin: 0; }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.zv-fail { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 260px; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.zv-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+</style>
+
+<div class="zv">
+  <header class="zv-head">
+    <h1 class="zv-title" id="title">Ставка «Звезда» для преподавателей студии СПб</h1>
+    <p class="zv-lede" id="lede"><span class="dash-skeleton">—</span></p>
+    <div class="zv-switch" role="group" aria-label="Вариант ставки «Звезда»">
+      <button type="button" id="v-spb_star350" data-scheme="spb_star350" aria-pressed="true">350 ₽/чел + база</button>
+      <button type="button" id="v-spb_star400" data-scheme="spb_star400" aria-pressed="false">400 ₽/чел + база</button>
+      <button type="button" id="v-spb_star400_nobase" data-scheme="spb_star400_nobase" aria-pressed="false">400 ₽/чел без базы</button>
+    </div>
+    <div class="zv-formula" id="formula"></div>
+    <div class="zv-window">Чернышевская · регулярные классы 09.10.2025–21.10.2026 · текущая загрузка = апрель–сентябрь 2026</div>
+  </header>
+
+  <section class="zv-tiles" id="kpi">
+    <div class="zv-tile">
+      <div class="zv-tile-label">Прирост Анне за класс</div>
+      <div class="zv-big zv-accent dash-skeleton" data-source="cur" data-field="diff">—</div>
+      <div class="zv-sub"><span data-source="cur" data-field="diff_pct">—</span> к стандарту</div>
+      <div class="zv-sub zv-warn" id="below" hidden></div>
+    </div>
+    <div class="zv-tile">
+      <div class="zv-tile-label">Оплата за класс: стандарт → «Звезда»</div>
+      <div class="zv-big"><span class="dash-skeleton" data-source="cur" data-field="pay_std">—</span> → <span data-source="cur" data-field="pay_star">—</span></div>
+      <div class="zv-sub">в среднем <span data-source="cur" data-field="avg_people">—</span> чел. на классе</div>
+    </div>
+    <div class="zv-tile">
+      <div class="zv-tile-label">Стоимость для студии в год</div>
+      <div class="zv-big dash-skeleton" data-source="cur" data-field="year_cost_pace">—</div>
+      <div class="zv-sub">при текущей загрузке · по факту 12 мес.: <span data-source="cur" data-field="year_cost_fact">—</span></div>
+    </div>
+    <div class="zv-tile">
+      <div class="zv-tile-label">Студии остаётся с класса</div>
+      <div class="zv-big"><span class="dash-skeleton" data-source="cur" data-field="left_std">—</span> → <span data-source="cur" data-field="left_star">—</span></div>
+      <div class="zv-sub">доля оплаты в выручке <span data-source="cur" data-field="share_std">—</span> → <span data-source="cur" data-field="share_star">—</span></div>
+    </div>
+  </section>
+
+  <section class="zv-grid">
+    <div class="zv-card">
+      <h2 id="monthly-title">Оплата Анне по месяцам</h2>
+      <p class="zv-note">Чем полнее залы, тем больше разница. Наведите на месяц — средняя посещаемость и прирост.</p>
+      <div class="zv-legend"><span><i style="background: var(--zv-std)"></i>Стандарт (250 ₽ с 6-го)</span><span><i style="background: var(--zv-star)"></i><span id="mon-leg">«Звезда»</span></span></div>
+      <div class="zv-chart dash-skeleton" id="monthly" data-source="monthly"></div>
+    </div>
+    <div class="zv-card">
+      <h2 id="size-title">Оплата за класс по размеру группы</h2>
+      <p class="zv-note">СПб против Москвы. Пунктир — средний класс Анны сейчас.</p>
+      <div class="zv-legend" id="size-legend"></div>
+      <div class="zv-chart dash-skeleton" id="size" data-source="grid"></div>
+    </div>
+  </section>
+
+  <section class="zv-card">
+    <h2 id="options-title">Варианты ставки «Звезда» на классах Анны</h2>
+    <p class="zv-note">Во всех вариантах, кроме «без базы», база 2 000 ₽ за класс до 5 человек и меняется только доплата за каждого с 6-го. Средний класс апреля–сентября 2026.</p>
+    <div class="zv-tablewrap">
+      <table class="zv-table" id="options" data-source="options" data-row-key="scheme">
+        <thead><tr>
+          <th data-field="label">Вариант</th>
+          <th data-field="pay_class">Анне за класс</th>
+          <th data-field="diff_pct">Прирост</th>
+          <th data-field="left_class">Студии с класса</th>
+          <th data-field="share">Доля в выручке</th>
+          <th data-field="year_cost">Стоимость в год</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="zv-foot">Выручка студии с класса посчитана по прайсу Чернышевской: разовое 1 400 ₽, абонементы 5/10/20 — по цене занятия в пакете, безлимиты — цена в месяц ÷ 12 визитов. Пробные, Fitmost, сотрудники и бартер — 0 ₽, поэтому доля оплаты преподавателя немного завышена. Спецклассы и запланированный класс 22.10 не учтены. «Стоимость в год при текущей загрузке» — разница за класс × темп апреля–сентября (≈150 классов в год).</p>
+</div>
+
+<script>
+const PAY = `(r, n) => r.base + Math.max(0, n - r.threshold) * r.per_head`;
+
+dash.calc('cur', {
+  title: 'Средний класс сейчас: стандарт vs варианты «Звезды»',
+  description: 'Для каждого варианта «Звезды» СПб: средняя оплата Анне за класс апреля–сентября 2026 против стандарта, остаток студии, классы, где «Звезда» меньше стандарта; годовая стоимость — по темпу этих месяцев и по факту 12 мес.',
+  inputs: ['kazakova_classes', 'rates'],
+  fn: (kazakova_classes, rates) => {
+    const pay = (r, n) => Number(r.base) + Math.max(0, n - Number(r.threshold)) * Number(r.per_head);
+    const std = rates.find(r => r.scheme === 'spb_std');
+    const all = kazakova_classes.map(c => ({ m: c.month, n: Number(c.people), rev: Number(c.revenue) }));
+    const cur = all.filter(c => c.m >= '2026-04' && c.m <= '2026-09');
+    const sum = (a, f) => a.reduce((s, x) => s + f(x), 0);
+    const k = cur.length, ps = sum(cur, c => pay(std, c.n)) / k, rev = sum(cur, c => c.rev) / k;
+    return rates.filter(r => r.city === 'СПб' && r.scheme !== 'spb_std').map(star => {
+      const pz = sum(cur, c => pay(star, c.n)) / k;
+      const lose = cur.filter(c => pay(star, c.n) < pay(std, c.n));
+      return {
+        scheme: star.scheme, label: star.label, base: Number(star.base), threshold: Number(star.threshold), per_head: Number(star.per_head),
+        classes: k, avg_people: sum(cur, c => c.n) / k, pay_std: ps, pay_star: pz, diff: pz - ps, diff_pct: pz / ps - 1,
+        revenue: rev, left_std: rev - ps, left_star: rev - pz, share_std: ps / rev, share_star: pz / rev,
+        year_cost_pace: (pz - ps) * k / 6 * 12,
+        year_cost_fact: sum(all, c => pay(star, c.n) - pay(std, c.n)),
+        classes_below: lose.length, loss_below: sum(lose, c => pay(std, c.n) - pay(star, c.n))
+      };
+    });
+  }
+});
+
+dash.calc('monthly', {
+  title: 'Оплата Анне по месяцам',
+  description: 'По каждому месяцу: классы, посещения, средняя посещаемость и оплата Анне по каждой ставке СПб (стандарт и варианты «Звезды»).',
+  inputs: ['kazakova_classes', 'rates'],
+  fn: (kazakova_classes, rates) => {
+    const pay = (r, n) => Number(r.base) + Math.max(0, n - Number(r.threshold)) * Number(r.per_head);
+    const spb = rates.filter(r => r.city === 'СПб');
+    const by = new Map();
+    for (const c of kazakova_classes) {
+      const n = Number(c.people), o = by.get(c.month) || { month: c.month, classes: 0, visits: 0 };
+      o.classes += 1; o.visits += n;
+      for (const r of spb) o['pay_' + r.scheme] = (o['pay_' + r.scheme] || 0) + pay(r, n);
+      by.set(c.month, o);
+    }
+    return [...by.values()].sort((a, b) => a.month < b.month ? -1 : 1)
+      .map(o => ({ ...o, avg_people: o.visits / o.classes }));
+  }
+});
+
+dash.calc('options', {
+  title: 'Варианты доплаты «Звезды»',
+  description: 'Для каждой ставки СПб: средняя оплата за класс апреля–сентября 2026, прирост, остаток студии, доля в выручке и стоимость в год по темпу этих месяцев.',
+  inputs: ['kazakova_classes', 'rates'],
+  fn: (kazakova_classes, rates) => {
+    const pay = (r, n) => Number(r.base) + Math.max(0, n - Number(r.threshold)) * Number(r.per_head);
+    const cur = kazakova_classes.filter(c => c.month >= '2026-04' && c.month <= '2026-09');
+    const k = cur.length, rev = cur.reduce((s, c) => s + Number(c.revenue), 0) / k;
+    const avg = r => cur.reduce((s, c) => s + pay(r, Number(c.people)), 0) / k;
+    const std = avg(rates.find(r => r.scheme === 'spb_std'));
+    return rates.filter(r => r.city === 'СПб').map(r => {
+      const p = avg(r);
+      return { scheme: r.scheme, label: r.label, per_head: Number(r.per_head), pay_class: p, diff_pct: p / std - 1,
+        left_class: rev - p, share: p / rev, year_cost: (p - std) * k / 6 * 12 };
+    });
+  }
+});
+
+dash.calc('grid', {
+  title: 'Оплата за класс по размеру группы',
+  description: 'Оплата за один класс от 1 до 27 человек по каждой ставке СПб и Москвы.',
+  inputs: ['rates'],
+  fn: (rates) => {
+    const pay = (r, n) => Number(r.base) + Math.max(0, n - Number(r.threshold)) * Number(r.per_head);
+    const out = [];
+    for (let n = 1; n <= 27; n++) {
+      const row = { people: n };
+      for (const r of rates) row[r.scheme] = pay(r, n);
+      out.push(row);
+    }
+    return out;
+  }
+});
+
+(() => {
+  const loc = d3.formatLocale({ decimal: ',', thousands: ' ', grouping: [3], currency: ['', ' ₽'] });
+  const rub = v => loc.format(',.0f')(Math.round(v)) + ' ₽';
+  const srub = v => (v > 0 ? '+' : v < 0 ? '−' : '') + rub(Math.abs(v));
+  const pct = v => loc.format('.1%')(v).replace('%', ' %');
+  const spct = v => (v > 0 ? '+' : '') + loc.format('.0%')(v).replace('%', ' %');
+  const one = v => loc.format('.1f')(v);
+  const thou = v => Math.abs(v) >= 1000 ? loc.format('.0f')(v / 1000) + ' тыс.' : loc.format('.0f')(v);
+  const MONTHS = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+  const mLabel = m => MONTHS[Number(m.slice(5, 7)) - 1] + ' ' + m.slice(2, 4);
+  const css = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+
+  const setText = (sel, v) => document.querySelectorAll(sel).forEach(el => { el.textContent = v; el.classList.remove('dash-skeleton'); });
+  const fail = el => { el.classList.remove('dash-skeleton'); el.innerHTML = ''; const d = document.createElement('div'); d.className = 'zv-fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
+
+  function tipIn(box) {
+    let t = box.querySelector('.zv-tip');
+    if (!t) { t = document.createElement('div'); t.className = 'zv-tip'; t.hidden = true; box.appendChild(t); }
+    return t;
+  }
+  function placeTip(box, t, x, y) {
+    t.hidden = false;
+    const bw = box.clientWidth, tw = t.offsetWidth;
+    t.style.left = Math.max(0, Math.min(bw - tw, x + 12)) + 'px';
+    t.style.top = Math.max(0, y - t.offsetHeight - 8) + 'px';
+  }
+  function fillTip(t, head, rows) {
+    t.innerHTML = '';
+    const h = document.createElement('div'); h.className = 'zv-tip-h'; h.textContent = head; t.appendChild(h);
+    for (const [color, name, val] of rows) {
+      const r = document.createElement('div'); r.className = 'zv-row';
+      if (color) { const i = document.createElement('i'); i.style.background = color; r.appendChild(i); }
+      const s = document.createElement('span'); s.textContent = name + ': ' + val; r.appendChild(s); t.appendChild(r);
+    }
+  }
+  function axisStyle(g) {
+    g.attr('font-size', null).attr('font-family', null);
+    g.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)');
+    g.selectAll('.domain').attr('stroke', 'var(--cds-chart-axis)');
+    g.selectAll('line').attr('stroke', 'var(--cds-chart-axis)');
+  }
+  function measure(svg, texts) {
+    const t = svg.append('text').style('font-size', 'var(--cds-font-size-caption)');
+    let w = 0; for (const s of texts) { t.text(s); w = Math.max(w, t.node().getComputedTextLength()); }
+    t.remove(); return w;
+  }
+
+  function drawMonthly(rawRows, scheme) {
+    const rows = rawRows.map(d => ({ ...d, pay_std: d.pay_spb_std, pay_star: d['pay_' + scheme], diff: d['pay_' + scheme] - d.pay_spb_std }));
+    const box = document.getElementById('monthly');
+    box.classList.remove('dash-skeleton');
+    d3.select(box).selectAll('svg').remove();
+    const W = Math.max(280, box.clientWidth), H = 260;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Оплата по месяцам');
+    const yMax = d3.max(rawRows, d => Math.max(d.pay_spb_std, d.pay_spb_star350, d.pay_spb_star400, d.pay_spb_star400_nobase));
+    const y = d3.scaleLinear([0, yMax], [H - 26, 10]).nice();
+    const ticks = y.ticks(4);
+    const ml = measure(svg, ticks.map(thou)) + 8;
+    const x = d3.scaleBand(rows.map(d => d.month), [ml, W - 4]).padding(0.22);
+    const xi = d3.scaleBand(['std', 'star'], [0, x.bandwidth()]).padding(0.08);
+    svg.append('g').selectAll('line').data(ticks).join('line')
+      .attr('x1', ml).attr('x2', W - 4).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+    const gy = svg.append('g').attr('transform', `translate(${ml - 4},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat(thou).tickSize(0));
+    axisStyle(gy); gy.select('.domain').remove();
+    const every = Math.ceil(rows.length / Math.max(1, Math.floor((W - ml) / 52)));
+    const gx = svg.append('g').attr('transform', `translate(0,${H - 26})`)
+      .call(d3.axisBottom(x).tickSize(0).tickPadding(8).tickFormat((m, i) => i % every === 0 ? mLabel(m) : ''));
+    axisStyle(gx);
+    const colStd = css(box, '--zv-std'), colStar = css(box, '--zv-star');
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.month)},0)`);
+    const bw = Math.min(32, xi.bandwidth());
+    const off = (xi.bandwidth() - bw) / 2;
+    g.append('rect').attr('x', xi('std') + off).attr('width', bw).attr('y', d => y(d.pay_std)).attr('height', d => y(0) - y(d.pay_std)).attr('rx', 3).attr('fill', colStd);
+    g.append('rect').attr('x', xi('star') + off).attr('width', bw).attr('y', d => y(d.pay_star)).attr('height', d => y(0) - y(d.pay_star)).attr('rx', 3).attr('fill', colStar);
+    const t = tipIn(box);
+    g.append('rect').attr('width', x.bandwidth()).attr('y', 0).attr('height', H - 26).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => {
+        fillTip(t, mLabel(d.month) + ' · ' + d.classes + ' кл. · ' + one(d.avg_people) + ' чел. в среднем',
+          [[colStd, 'Стандарт', rub(d.pay_std)], [colStar, '«Звезда»', rub(d.pay_star)], [null, 'Прирост', srub(d.diff)]]);
+        const [px, py] = d3.pointer(ev, box); placeTip(box, t, px, py);
+      })
+      .on('mouseleave', () => { t.hidden = true; });
+  }
+
+  const SERIES = [
+    { key: 'spb_std', name: 'СПб стандарт', color: '--zv-std', dash: null },
+    { key: 'spb_star350', name: 'СПб «Звезда» 350', color: '--zv-star', dash: null },
+    { key: 'spb_star400', name: 'СПб «Звезда» 400', color: '--zv-star', dash: '5 4' },
+    { key: 'spb_star400_nobase', name: 'СПб 400 без базы', color: '--zv-star', dash: '1 3' },
+    { key: 'msk_std', name: 'Москва стандарт', color: '--zv-msk', dash: '2 3' },
+    { key: 'msk_star', name: 'Москва «Звезда»', color: '--zv-msk', dash: null }
+  ];
+  function drawSize(rows, avgPeople) {
+    const box = document.getElementById('size');
+    box.classList.remove('dash-skeleton');
+    d3.select(box).selectAll('svg').remove();
+    const leg = document.getElementById('size-legend'); leg.innerHTML = '';
+    for (const s of SERIES) {
+      const sp = document.createElement('span'), i = document.createElement('i');
+      i.className = 'zv-line'; i.style.background = `var(${s.color})`; if (s.dash) i.style.opacity = '.6';
+      sp.appendChild(i); sp.appendChild(document.createTextNode(s.name)); leg.appendChild(sp);
+    }
+    const W = Math.max(280, box.clientWidth), H = 260;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Оплата за класс по размеру группы');
+    const yMax = d3.max(rows, d => Math.max(...SERIES.map(s => d[s.key])));
+    const y = d3.scaleLinear([0, yMax], [H - 26, 10]).nice();
+    const ticks = y.ticks(4);
+    const ml = measure(svg, ticks.map(thou)) + 8;
+    const mr = measure(svg, ['27 чел.']) / 2 + 4;
+    const x = d3.scaleLinear([1, 27], [ml + measure(svg, ['1 чел.']) / 2, W - mr]);
+    svg.append('g').selectAll('line').data(ticks).join('line')
+      .attr('x1', ml).attr('x2', W - mr).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+    const gy = svg.append('g').attr('transform', `translate(${ml - 4},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat(thou).tickSize(0));
+    axisStyle(gy); gy.select('.domain').remove();
+    const gx = svg.append('g').attr('transform', `translate(0,${H - 26})`).call(d3.axisBottom(x).tickValues([1, 5, 10, 15, 20, 27]).tickSize(0).tickPadding(8).tickFormat(v => v + ' чел.'));
+    axisStyle(gx);
+    if (avgPeople) {
+      svg.append('line').attr('x1', x(avgPeople)).attr('x2', x(avgPeople)).attr('y1', 10).attr('y2', H - 26)
+        .attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+      const lbl = svg.append('text').attr('y', 22).attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)')
+        .text('Анна ≈ ' + one(avgPeople));
+      const lw = lbl.node().getComputedTextLength();
+      lbl.attr('x', x(avgPeople) - lw - 6 > ml ? x(avgPeople) - lw - 6 : x(avgPeople) + 6);
+    }
+    const line = d3.line().x(d => x(d.people));
+    for (const s of SERIES) {
+      svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', css(box, s.color)).attr('stroke-width', 2)
+        .attr('stroke-linejoin', 'round').attr('stroke-linecap', s.dash ? 'butt' : 'round').attr('stroke-dasharray', s.dash)
+        .attr('d', line.y(d => y(d[s.key])));
+    }
+    const t = tipIn(box);
+    const dot = svg.append('line').attr('y1', 10).attr('y2', H - 26).attr('stroke', 'var(--cds-chart-axis)').attr('opacity', 0);
+    svg.append('rect').attr('x', ml).attr('width', W - mr - ml).attr('y', 0).attr('height', H - 26).attr('fill', 'transparent')
+      .on('mousemove', ev => {
+        const [mx] = d3.pointer(ev);
+        const n = Math.max(1, Math.min(27, Math.round(x.invert(mx))));
+        const d = rows[n - 1];
+        dot.attr('x1', x(n)).attr('x2', x(n)).attr('opacity', 1);
+        fillTip(t, n + ' чел. в классе', SERIES.map(s => [css(box, s.color), s.name, rub(d[s.key])]));
+        const [px, py] = d3.pointer(ev, box); placeTip(box, t, px, py);
+      })
+      .on('mouseleave', () => { t.hidden = true; dot.attr('opacity', 0); });
+  }
+
+  function drawTable(rows) {
+    const tb = document.querySelector('#options tbody'); tb.innerHTML = '';
+    for (const r of rows) {
+      const tr = document.createElement('tr'); tr.dataset.key = r.scheme; if (r.scheme === 'spb_star400') tr.className = 'zv-rec';
+      const td0 = document.createElement('td'); td0.textContent = r.label;
+      if (r.scheme === 'spb_star400') { const p = document.createElement('span'); p.className = 'zv-pill'; p.textContent = 'рекомендуем'; td0.appendChild(p); }
+      if (r.scheme === 'spb_star350') { const p = document.createElement('span'); p.className = 'zv-pill'; p.textContent = 'текущее предложение'; td0.appendChild(p); }
+      tr.appendChild(td0);
+      for (const v of [rub(r.pay_class), r.diff_pct ? spct(r.diff_pct) : '—', rub(r.left_class), pct(r.share), r.year_cost ? srub(r.year_cost) : '—']) {
+        const td = document.createElement('td'); td.textContent = v; tr.appendChild(td);
+      }
+      tb.appendChild(tr);
+    }
+  }
+
+  const VARIANTS = ['spb_star350', 'spb_star400', 'spb_star400_nobase'];
+  let scheme = 'spb_star350';
+  try { const v = localStorage.getItem('zv-scheme'); if (VARIANTS.includes(v)) scheme = v; } catch (e) {}
+  const btns = [...document.querySelectorAll('.zv-switch button')];
+  const syncButtons = () => btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scheme === scheme)));
+  let redraw = () => {};
+  btns.forEach(b => b.addEventListener('click', () => {
+    scheme = b.dataset.scheme; syncButtons();
+    try { localStorage.setItem('zv-scheme', scheme); } catch (e) {}
+    redraw();
+  }));
+  syncButtons();
+
+  const CUR_FIELDS = ['diff', 'diff_pct', 'pay_std', 'pay_star', 'avg_people', 'year_cost_pace', 'year_cost_fact', 'left_std', 'left_star', 'share_std', 'share_star'];
+  dash.onData(() => { redraw = render; render(); });
+  function render() {
+    const cur = dash.data('cur'), mon = dash.data('monthly'), grid = dash.data('grid'), opt = dash.data('options');
+    const c = cur.status === 'ok' ? cur.data.find(r => r.scheme === scheme) : null;
+    document.querySelectorAll('[data-source="cur"]').forEach(el => el.setAttribute('data-where', 'scheme=' + scheme));
+    const below = document.getElementById('below'), formula = document.getElementById('formula');
+    const vname = btns.find(b => b.dataset.scheme === scheme).textContent;
+    if (c) {
+      const F = { diff: srub, diff_pct: spct, pay_std: rub, pay_star: rub, avg_people: one, year_cost_pace: rub, year_cost_fact: rub, left_std: rub, left_star: rub, share_std: pct, share_star: pct };
+      for (const f of CUR_FIELDS) setText(`[data-source="cur"][data-field="${f}"]`, F[f](c[f]));
+      formula.textContent = c.base ? `Формула: ${rub(c.base)} за класс до ${c.threshold} чел. + ${rub(c.per_head)} за каждого с ${c.threshold + 1}-го. Стандарт: 2 000 ₽ + 250 ₽ с 6-го.`
+                                   : `Формула: ${rub(c.per_head)} за каждого человека, без базы. Стандарт: 2 000 ₽ до 5 чел. + 250 ₽ с 6-го.`;
+      if (c.classes_below) {
+        below.hidden = false;
+        below.textContent = `На ${c.classes_below} из ${c.classes} классов оплата ниже стандарта (−${rub(c.loss_below)} за полгода)`;
+      } else below.hidden = true;
+      const lede = document.getElementById('lede'); lede.innerHTML = '';
+      const tail = c.base
+        ? (c.per_head >= 400 ? '. Прибавка сопоставима с московской «Звездой», и ни один класс не оплачивается ниже стандарта.' : '. Это заметно ниже прибавки московской «Звезды» (график ниже), поэтому для удержания разумнее 400 ₽ с 6-го.')
+        : '. Но без базы маленькие классы оплачиваются ниже стандарта: на группах до 5 человек преподаватель теряет.';
+      const parts = [
+        ['При текущей загрузке вариант «' + vname + '» даёт Анне ', null],
+        [srub(c.diff) + ' за класс (' + spct(c.diff_pct) + ')', 'b'],
+        [' и обходится студии примерно в ', null],
+        [rub(c.year_cost_pace) + ' в год', 'b'],
+        [tail, null]
+      ];
+      for (const [txt, tag] of parts) { const n = tag ? document.createElement(tag) : document.createTextNode(txt); if (tag) n.textContent = txt; lede.appendChild(n); }
+      document.getElementById('mon-leg').textContent = '«Звезда»: ' + vname;
+    } else {
+      document.querySelectorAll('[data-source="cur"]').forEach(el => { el.textContent = '—'; });
+      below.hidden = true; formula.textContent = '';
+    }
+
+    const mb = document.getElementById('monthly');
+    if (mon.status === 'ok' && mon.data.length) drawMonthly(mon.data, scheme);
+    else if (mon.status === 'error') fail(mb);
+    else { d3.select(mb).selectAll('svg').remove(); mb.classList.add('dash-skeleton'); }
+
+    const sb = document.getElementById('size');
+    if (grid.status === 'ok' && grid.data.length) drawSize(grid.data, c ? c.avg_people : null);
+    else if (grid.status === 'error') fail(sb);
+    else { d3.select(sb).selectAll('svg').remove(); sb.classList.add('dash-skeleton'); }
+
+    if (opt.status === 'ok') drawTable(opt.data);
+    else document.querySelector('#options tbody').innerHTML = '';
+    document.querySelectorAll('#options tbody tr').forEach(tr => tr.classList.toggle('zv-sel', tr.dataset.key === scheme));
+  }
+})();
+</script>
+
+</div></body></html>
