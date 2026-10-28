@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ставка аштанги СПб</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=PT+Serif&display=swap">
+<style>:root{color-scheme:light;
+  --color-fg:#3F4826; --color-fg-muted:#6F7656; --color-bg:#FDF6F0; --color-panel:#FFFFFF; --color-border-line:#E6DDD3;
+  --color-ok:#5C6937; --color-warn:#C8641E; --color-bad:#C0392B;
+  --font-anthropic-sans:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif; --font-anthropic-serif:"PT Serif",Georgia,serif;
+  --cds-gap-xs:6px; --cds-gap-sm:10px; --cds-gap-md:16px; --cds-gap-lg:28px; --cds-pad-xs:4px; --cds-pad-sm:8px; --cds-pad-lg:20px;
+  --cds-radius:12px; --cds-font-size-caption:12.5px; --cds-font-size-body:14px; --cds-font-size-heading:17px; --cds-font-size-title:30px;
+  --cds-font-weight-medium:600; --cds-text-secondary:#6F7656; --cds-surface-popover:#FFFFFF; --cds-border:#E6DDD3;
+  --cds-shadow-popover:0 6px 20px rgba(63,72,38,.15); --cds-chart-axis:#CFC7BC; --cds-chart-grid:#EFE7DE; --cds-chart-reference:#6F7656; --cds-chart-muted:#B9B2A8; --cds-dur-slow:.3s}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --color-fg:#EDE6DC; --color-fg-muted:#B9B6A6; --color-bg:#1C2016; --color-panel:#252A1D; --color-border-line:#3A4130;
+  --cds-text-secondary:#B9B6A6; --cds-surface-popover:#2C3223; --cds-border:#3A4130; --cds-chart-axis:#4A5240; --cds-chart-grid:#2C3223; --cds-chart-reference:#B9B6A6}}
+html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px}
+#dash-root{padding:28px 16px 56px}
+.dash-skeleton{color:var(--color-fg-muted)}</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script type="text/csv" id="ds-ashtanga_classes">date,month,weekday,time,teacher,class_type,people
+2026-09-01,2026-09,Вт,07:30,Соболевская Арина,Майсор,5
+2026-09-02,2026-09,Ср,07:30,Соболевская Арина,Майсор,16
+2026-09-03,2026-09,Чт,07:30,Болсуновская Анна,Майсор,11
+2026-09-04,2026-09,Пт,08:00,Соболевская Арина,ЛЭД,8
+2026-09-06,2026-09,Вс,09:00,Соболевская Арина,Майсор,9
+2026-09-07,2026-09,Пн,07:30,Зинурова Наталья,Майсор,9
+2026-09-08,2026-09,Вт,07:30,Соболевская Арина,Майсор,10
+2026-09-09,2026-09,Ср,07:30,Соболевская Арина,Майсор,10
+2026-09-10,2026-09,Чт,07:30,Болсуновская Анна,Майсор,7
+2026-09-11,2026-09,Пт,08:00,Соболевская Арина,ЛЭД,7
+2026-09-13,2026-09,Вс,09:00,Соболевская Арина,Майсор,8
+2026-09-14,2026-09,Пн,07:30,Болсуновская Анна,Майсор,7
+2026-09-15,2026-09,Вт,07:30,Соболевская Арина,Майсор,8
+2026-09-16,2026-09,Ср,07:30,Зинурова Наталья,Майсор,6
+2026-09-17,2026-09,Чт,07:30,Болсуновская Анна,Майсор,4
+2026-09-18,2026-09,Пт,08:00,Зинурова Наталья,ЛЭД,10
+2026-09-20,2026-09,Вс,09:00,Соболевская Арина,Майсор,6
+2026-09-21,2026-09,Пн,07:30,Зинурова Наталья,Майсор,12
+2026-09-22,2026-09,Вт,07:30,Болсуновская Анна,Майсор,6
+2026-09-23,2026-09,Ср,07:30,Соболевская Арина,Майсор,10
+2026-09-24,2026-09,Чт,07:30,Болсуновская Анна,Майсор,10
+2026-09-25,2026-09,Пт,08:00,Соболевская Арина,ЛЭД,9
+2026-09-27,2026-09,Вс,09:00,Соболевская Арина,Майсор,12
+2026-09-28,2026-09,Пн,07:30,Зинурова Наталья,Майсор,5
+2026-09-29,2026-09,Вт,07:30,Зинурова Наталья,Майсор,7
+2026-09-30,2026-09,Ср,07:30,Соболевская Арина,Майсор,8
+2026-10-01,2026-10,Чт,07:30,Болсуновская Анна,Майсор,8
+2026-10-02,2026-10,Пт,08:00,Соболевская Арина,ЛЭД,7
+2026-10-04,2026-10,Вс,09:00,Соболевская Арина,Майсор,10
+2026-10-05,2026-10,Пн,07:30,Зинурова Наталья,Майсор,10
+2026-10-06,2026-10,Вт,07:30,Соболевская Арина,Майсор,13
+2026-10-07,2026-10,Ср,07:30,Зинурова Наталья,Майсор,11
+2026-10-08,2026-10,Чт,07:30,Болсуновская Анна,Майсор,12
+2026-10-09,2026-10,Пт,08:00,Зинурова Наталья,ЛЭД,9
+2026-10-11,2026-10,Вс,09:00,Соболевская Арина,Майсор,8
+2026-10-12,2026-10,Пн,07:30,Зинурова Наталья,Майсор,9
+2026-10-13,2026-10,Вт,07:30,Соболевская Арина,Майсор,12
+2026-10-14,2026-10,Ср,07:30,Зинурова Наталья,Майсор,4
+2026-10-15,2026-10,Чт,07:30,Болсуновская Анна,Майсор,6
+2026-10-16,2026-10,Пт,08:00,Соболевская Арина,ЛЭД,4
+2026-10-18,2026-10,Вс,09:00,Соболевская Арина,Майсор,6
+2026-10-19,2026-10,Пн,07:30,Зинурова Наталья,Майсор,3
+2026-10-20,2026-10,Вт,07:30,Соболевская Арина,Майсор,11
+2026-10-21,2026-10,Ср,07:30,Соболевская Арина,Майсор,9
+2026-10-22,2026-10,Чт,07:30,Болсуновская Анна,Майсор,7
+2026-10-23,2026-10,Пт,08:00,Зинурова Наталья,ЛЭД,8
+2026-10-25,2026-10,Вс,09:00,Соболевская Арина,Майсор,6
+2026-10-26,2026-10,Пн,07:30,Зинурова Наталья,Майсор,5
+2026-10-27,2026-10,Вт,07:30,Соболевская Арина,Майсор,5
+2026-10-28,2026-10,Ср,07:30,Зинурова Наталья,Майсор,3
+</script>
+<script type="text/csv" id="ds-ashtanga_payments">payment_type,visits,rub_per_visit,method
+Безлимит Майсор (утро),210,990,"10 800 ₽ ÷ ~11 визитов в месяц (факт держателей за 01.09–28.10)"
+Безлимит 1 мес.,48,1408,"16 900 ₽ ÷ 12 визитов в месяц (допущение)"
+Абонемент 10,48,1150,"Прайс: 11 500 ₽ ÷ 10"
+Разовое,16,1400,"Прайс"
+Абонемент 20,16,1045,"Прайс: 20 900 ₽ ÷ 20"
+Безлимит летний,15,1408,"Нет в прайсе, взят как безлимит 1 мес."
+Абонемент 5,10,1250,"Прайс: 6 250 ₽ ÷ 5"
+Безлимит 3 мес.,10,1153,"41 500 ₽ ÷ 3 мес. ÷ 12 визитов"
+"Бесплатные: сотрудники, пробные, Fitmost, блогер",33,0,"Выручка не учитывается"
+</script>
+<script type="text/csv" id="ds-ashtanga_rates">scheme,label,short,base,threshold,per_head,minimum
+std,Стандарт: 2 000 ₽ + 250 ₽ с 6-го,Стандарт,2000,5,250,0
+per400,400 ₽/чел без базы,400 ₽/чел,0,0,400,0
+per450min,"450 ₽/чел, минимум 2 500 ₽",450 ₽/чел + мин. 2 500,0,0,450,2500
+per500,500 ₽/чел без базы,500 ₽/чел,0,0,500,0
+</script>
+<script>
+(function(){
+  const raw = {}, calcs = {}, cache = {}, subs = [];
+  document.querySelectorAll('script[type="text/csv"][id^="ds-"]').forEach(s => { raw[s.id.slice(3)] = d3.csvParse(s.textContent.trim()); });
+  function rows(id){
+    if (id in raw) return raw[id];
+    if (id in cache) return cache[id];
+    const c = calcs[id]; if (!c) return null;
+    return cache[id] = c.fn(...c.inputs.map(rows));
+  }
+  window.dash = {
+    data(id){ try { const d = rows(id); return d ? {status:'ok', data:d, rows:d, columns: d.columns || (d[0] ? Object.keys(d[0]) : []), refreshing:false, meta:[]} : {status:'missing', data:[], rows:[], columns:[], meta:[]}; }
+              catch(e){ console.error(e); return {status:'error', data:[], rows:[], columns:[], message:String(e), meta:[]}; } },
+    calc(id, spec){ calcs[id] = spec; },
+    loader(){}, refresh(){}, params(){ return {}; }, setParams(){}, resetParams(){}, setLink(){},
+    colors: ['#5C6937','#F0803B','#A2B9C9','#7C8760','#CB6D33','#AEB49C','#9b89c4','#c8956a'],
+    onData(fn){ subs.push(fn); fn(); },
+    draw(name, spec){
+      if (spec !== undefined) { draws[name] = spec; if (ready) runDraw(name); return; }
+      runDraw(name);
+    }
+  };
+  const draws = {}, made = new WeakMap(); let ready = false;
+  function runDraw(name){
+    const spec = draws[name]; if (!spec) return;
+    document.querySelectorAll('[data-draw="' + name + '"]').forEach(el => {
+      if (el.closest('[hidden]')) return;
+      try {
+        if (typeof spec === 'function') spec(el);
+        else { if (!made.has(el)) { el.replaceChildren(); made.set(el, spec.mount ? spec.mount(el) : undefined); }
+               if (spec.update) spec.update(el, made.get(el)); }
+      } catch (e) { console.error('draw ' + name, e); }
+    });
+  }
+  window.__dashReady = () => { ready = true; Object.keys(draws).forEach(runDraw); };
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { subs.forEach(f => f()); Object.keys(draws).forEach(runDraw); }, 150); });
+})();
+</script>
+</head><body><div id="dash-root">
+
+<style>
+.as { --as-acc: #F0803B; --as-acc-soft: #FDE6D9; --as-acc-fg: #CB6D33; --as-std: #A5A09D; --as-studio: #AEB49C; --as-green: #5C6937;
+  display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); max-width: 72rem; margin-inline: auto; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .as { --as-acc: #F49A60; --as-acc-soft: #4A3426; --as-acc-fg: #F9C1A0; --as-std: #8E8985; --as-studio: #7C8760; --as-green: #AEB49C; } }
+:root[data-theme="dark"] .as { --as-acc: #F49A60; --as-acc-soft: #4A3426; --as-acc-fg: #F9C1A0; --as-std: #8E8985; --as-studio: #7C8760; --as-green: #AEB49C; }
+.as-head { display: grid; gap: var(--cds-gap-sm); }
+.as-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.as-lede { margin: 0; color: var(--color-fg-muted); max-width: 66ch; line-height: 1.55; }
+.as .as-lede b { color: var(--color-fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.as-window { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.as-switch { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); padding: 4px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; width: fit-content; max-width: 100%; }
+.as-switch button { font: inherit; font-size: var(--cds-font-size-body); border: 0; background: transparent; color: var(--color-fg-muted); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+.as-switch button:hover { color: var(--color-fg); }
+.as-switch button[aria-pressed="true"] { background: var(--as-acc); color: #fff; }
+.as-switch button:focus-visible { outline: 2px solid var(--as-acc); outline-offset: 2px; }
+.as-formula { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.as-tiles { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.as-tile, .as-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+.as-tile { display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.as-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.as-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.as-big.as-accent { color: var(--as-acc); }
+.as-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.as-grid { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); }
+.as-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.as-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: var(--cds-gap-xs) 0 var(--cds-gap-md); line-height: 1.45; }
+.as-chart { position: relative; min-height: 220px; }
+.as-chart.as-tall { min-height: 260px; }
+.as-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); }
+.as-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.as-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.as-legend i.as-line { height: 2px; width: 14px; border-radius: 1px; }
+.as-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; white-space: nowrap; z-index: 2; }
+.as-tip-h { color: var(--cds-text-secondary); margin-bottom: 2px; }
+.as-tip-r { display: flex; align-items: center; gap: 6px; }
+.as-tip-r i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+.as-tablewrap { overflow-x: auto; }
+.as-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.as-table th { text-align: right; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: bottom; }
+.as-table th:first-child, .as-table td:first-child { text-align: left; }
+.as-table td { text-align: right; padding: var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.as-table tr.as-sel td { background: var(--as-acc-soft); font-weight: 600; }
+.as-table tr.as-total td { font-weight: 600; }
+.as-bad { color: var(--color-bad); }
+.as-foot { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; max-width: 84ch; margin: 0; }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.as-fail { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 220px; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.as-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+</style>
+
+<div class="as">
+  <header class="as-head">
+    <h1 class="as-title" id="title">Ставка аштанги СПб</h1>
+    <p class="as-lede" id="lede">На классе аштанги в среднем <b data-draw="avg_people" data-source="variants" data-field="avg_people" data-where="scheme=per450min">—</b> чел., выручка студии с класса — около <b data-draw="rev_class" data-source="variants" data-field="revenue_class" data-where="scheme=per450min">—</b>. При варианте «<b data-draw="v_name" data-source="variants" data-field="short" data-where="scheme=per450min">—</b>» преподаватель получает <b data-draw="v_pay" data-source="variants" data-field="pay_class" data-where="scheme=per450min">—</b> за класс (<b data-draw="v_diff_pct" data-source="variants" data-field="diff_pct" data-where="scheme=per450min">—</b> к стандарту), а студии остаётся <b data-draw="v_left" data-source="variants" data-field="left_class" data-where="scheme=per450min">—</b>.</p>
+    <div class="as-switch" role="group" aria-label="Вариант оплаты">
+      <button type="button" id="v-std" data-scheme="std" aria-pressed="false">Стандарт</button>
+      <button type="button" id="v-per400" data-scheme="per400" aria-pressed="false">400 ₽/чел</button>
+      <button type="button" id="v-per450min" data-scheme="per450min" aria-pressed="true">450 ₽/чел + минимум 2 500</button>
+      <button type="button" id="v-per500" data-scheme="per500" aria-pressed="false">500 ₽/чел</button>
+    </div>
+    <div class="as-formula">Формула: <span data-draw="v_formula" data-source="ashtanga_rates" data-field="label" data-where="scheme=per450min">—</span></div>
+    <div class="as-window">Чернышевская · Майсор и ЛЭД · Соболевская, Зинурова, Болсуновская · 01.09–28.10.2026 · класс 150 минут</div>
+  </header>
+
+  <section class="as-tiles" id="kpi">
+    <div class="as-tile">
+      <div class="as-label">Преподавателю за класс</div>
+      <div class="as-big as-accent" data-draw="t_pay" data-source="variants" data-field="pay_class" data-where="scheme=per450min">—</div>
+      <div class="as-sub">стандарт <span data-draw="t_pay_std" data-source="variants" data-field="pay_std" data-where="scheme=per450min">—</span> · <span data-draw="t_diff" data-source="variants" data-field="diff" data-where="scheme=per450min">—</span></div>
+    </div>
+    <div class="as-tile">
+      <div class="as-label">В пересчёте на 90 минут</div>
+      <div class="as-big" data-draw="t_per90" data-source="variants" data-field="per90" data-where="scheme=per450min">—</div>
+      <div class="as-sub">обычный 90-минутный класс на 8 чел.: <span data-draw="t_reg8" data-source="variants" data-field="reg8" data-where="scheme=per450min">—</span></div>
+    </div>
+    <div class="as-tile">
+      <div class="as-label">Студии остаётся с класса</div>
+      <div class="as-big" data-draw="t_left" data-source="variants" data-field="left_class" data-where="scheme=per450min">—</div>
+      <div class="as-sub">оплата преподавателя — <span data-draw="t_share" data-source="variants" data-field="share" data-where="scheme=per450min">—</span> выручки</div>
+    </div>
+    <div class="as-tile">
+      <div class="as-label">Доплата студии в месяц</div>
+      <div class="as-big" data-draw="t_month" data-source="variants" data-field="month_diff" data-where="scheme=per450min">—</div>
+      <div class="as-sub">классов ниже стандарта: <span data-draw="t_below" data-source="variants" data-field="below" data-where="scheme=per450min">—</span></div>
+    </div>
+  </section>
+
+  <section class="as-card">
+    <h2 id="options-title">Четыре варианта на классах аштанги</h2>
+    <p class="as-note">Средний класс 01.09–28.10. Доплата в месяц — разница со стандартом при текущем числе классов.</p>
+    <div class="as-tablewrap">
+      <table class="as-table" id="options" data-source="variants" data-row-key="scheme">
+        <thead><tr>
+          <th data-field="label">Вариант</th>
+          <th data-field="pay_class">Преподавателю за класс</th>
+          <th data-field="diff_pct">К стандарту</th>
+          <th data-field="per90">На 90 минут</th>
+          <th data-field="left_class">Студии с класса</th>
+          <th data-field="share">Доля в выручке</th>
+          <th data-field="month_diff">Доплата в месяц</th>
+          <th data-field="below">Классов ниже стандарта</th>
+        </tr></thead>
+        <tbody data-draw="options_body" data-source="variants"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="as-grid">
+    <div class="as-card">
+      <h2 id="split-title">Как делится выручка класса</h2>
+      <p class="as-note">Выручка с одного класса и часть, которая уходит преподавателю.</p>
+      <div class="as-legend"><span><i style="background: var(--as-acc)"></i>Преподавателю</span><span><i style="background: var(--as-studio)"></i>Остаётся студии</span></div>
+      <div class="as-chart" id="split" data-draw="split" data-source="variants"></div>
+    </div>
+    <div class="as-card">
+      <h2 id="size-title">Оплата за класс по размеру группы</h2>
+      <p class="as-note">Линии — схемы оплаты. Столбики внизу — сколько классов было с таким числом людей.</p>
+      <div class="as-legend"><span><i class="as-line" style="background: var(--as-std)"></i>Стандарт</span><span><i class="as-line" style="background: var(--as-acc); opacity: .55"></i>400 ₽/чел</span><span><i class="as-line" style="background: var(--as-acc)"></i>450 ₽/чел + мин. 2 500</span><span><i class="as-line" style="background: var(--as-green)"></i>500 ₽/чел</span></div>
+      <div class="as-chart as-tall" id="size" data-draw="size" data-source="grid sizes"></div>
+    </div>
+  </section>
+
+  <section class="as-grid">
+    <div class="as-card">
+      <h2 id="attendance-title">Посещаемость: сентябрь и октябрь</h2>
+      <p class="as-note">Октябрь — по 28-е число.</p>
+      <div class="as-tablewrap">
+        <table class="as-table" id="attendance" data-source="attendance" data-row-key="teacher">
+          <thead><tr>
+            <th data-field="teacher">Преподаватель</th>
+            <th data-field="classes_sep">Классов, сен</th>
+            <th data-field="avg_sep">Чел. в среднем, сен</th>
+            <th data-field="classes_oct">Классов, окт</th>
+            <th data-field="avg_oct">Чел. в среднем, окт</th>
+            <th data-field="small">Классов до 4 чел.</th>
+          </tr></thead>
+          <tbody data-draw="attendance_body" data-source="attendance"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="as-card">
+      <h2 id="payments-title">За что платят на аштанге</h2>
+      <p class="as-note">Посещения по основаниям оплаты и выручка студии за одно посещение.</p>
+      <div class="as-chart" id="payments" data-draw="payments" data-source="ashtanga_payments"></div>
+    </div>
+  </section>
+
+  <p class="as-foot">Выручка за посещение: безлимит Майсор — 10 800 ₽ на фактические ~11 визитов в месяц его держателей; общие безлимиты — цена в месяц на 12 визитов; абонементы и разовые — по прайсу; сотрудники, пробные, Fitmost и блогеры — 0 ₽. «На 90 минут» — оплата за класс × 90 / 150. Источник посещений — отчёты 1С по трём преподавателям аштанги.</p>
+</div>
+
+<script>
+dash.calc('variants', {
+  title: 'Варианты оплаты аштанги',
+  description: 'Для каждой схемы: средняя оплата за класс, разница со стандартом, оплата на 90 минут, остаток студии, доля в выручке, доплата в месяц и классы ниже стандарта.',
+  inputs: ['ashtanga_classes', 'ashtanga_payments', 'ashtanga_rates'],
+  fn: (ashtanga_classes, ashtanga_payments, ashtanga_rates) => {
+    const pay = (r, n) => Math.max(Number(r.minimum), Number(r.base) + Math.max(0, n - Number(r.threshold)) * Number(r.per_head));
+    const ns = ashtanga_classes.map(c => Number(c.people));
+    const k = ns.length, visits = ns.reduce((s, n) => s + n, 0);
+    const revenue = ashtanga_payments.reduce((s, p) => s + Number(p.visits) * Number(p.rub_per_visit), 0);
+    const dates = ashtanga_classes.map(c => c.date).sort();
+    const days = (new Date(dates[dates.length - 1]) - new Date(dates[0])) / 864e5 + 1;
+    const std = ashtanga_rates.find(r => r.scheme === 'std');
+    const payStd = ns.reduce((s, n) => s + pay(std, n), 0) / k;
+    return ashtanga_rates.map(r => {
+      const p = ns.reduce((s, n) => s + pay(r, n), 0) / k;
+      return {
+        scheme: r.scheme, label: r.label, short: r.short,
+        avg_people: visits / k, revenue_class: revenue / k, reg8: pay(std, 8),
+        pay_std: payStd, pay_class: p, diff: p - payStd, diff_pct: p / payStd - 1, per90: p * 90 / 150,
+        left_class: revenue / k - p, share: p / (revenue / k),
+        month_diff: (p - payStd) * k / days * 30,
+        below: ns.filter(n => pay(r, n) < pay(std, n)).length
+      };
+    });
+  }
+});
+
+dash.calc('grid', {
+  title: 'Оплата по размеру группы',
+  description: 'Оплата за класс от 1 до 16 человек по каждой схеме.',
+  inputs: ['ashtanga_rates'],
+  fn: (ashtanga_rates) => {
+    const pay = (r, n) => Math.max(Number(r.minimum), Number(r.base) + Math.max(0, n - Number(r.threshold)) * Number(r.per_head));
+    const out = [];
+    for (let n = 1; n <= 16; n++) { const row = { people: n }; for (const r of ashtanga_rates) row[r.scheme] = pay(r, n); out.push(row); }
+    return out;
+  }
+});
+
+dash.calc('sizes', {
+  title: 'Классы по числу людей',
+  description: 'Сколько классов аштанги прошло с каждым числом людей.',
+  inputs: ['ashtanga_classes'],
+  fn: (ashtanga_classes) => {
+    const m = new Map();
+    for (const c of ashtanga_classes) { const n = Number(c.people); m.set(n, (m.get(n) || 0) + 1); }
+    return [...m].map(([people, classes]) => ({ people, classes })).sort((a, b) => a.people - b.people);
+  }
+});
+
+dash.calc('attendance', {
+  title: 'Посещаемость по преподавателям',
+  description: 'Классы и средняя посещаемость в сентябре и октябре по каждому преподавателю и в целом; классы с 4 людьми и меньше.',
+  inputs: ['ashtanga_classes'],
+  fn: (ashtanga_classes) => {
+    const row = (name, cs) => {
+      const s = cs.filter(c => c.month === '2026-09'), o = cs.filter(c => c.month === '2026-10');
+      const avg = a => a.length ? a.reduce((t, c) => t + Number(c.people), 0) / a.length : 0;
+      return { teacher: name, classes_sep: s.length, avg_sep: avg(s), classes_oct: o.length, avg_oct: avg(o), small: cs.filter(c => Number(c.people) <= 4).length };
+    };
+    const names = [...new Set(ashtanga_classes.map(c => c.teacher))].sort();
+    return [...names.map(n => row(n, ashtanga_classes.filter(c => c.teacher === n))), row('Все преподаватели', ashtanga_classes)];
+  }
+});
+
+window.asState = window.asState || { scheme: 'per450min' };
+(() => {
+  const loc = d3.formatLocale({ decimal: ',', thousands: ' ', grouping: [3], currency: ['', ' ₽'] });
+  const rub = v => loc.format(',.0f')(Math.round(v)) + ' ₽';
+  const srub = v => (v > 0 ? '+' : v < 0 ? '−' : '±') + rub(Math.abs(v));
+  const pct = v => loc.format('.0%')(v).replace('%', ' %');
+  const spct = v => Math.abs(v) < 0.0005 ? '0 %' : (v > 0 ? '+' : '−') + pct(Math.abs(v));
+  const one = v => loc.format('.1f')(v);
+  const thou = v => v >= 1000 ? loc.format('.1f')(v / 1000).replace(',0', '') + ' тыс.' : loc.format('.0f')(v);
+  const css = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+  window.asFmt = { rub, srub, pct, spct, one };
+
+  const NAMES = ['avg_people', 'rev_class', 'v_name', 'v_pay', 'v_diff_pct', 'v_left', 'v_formula', 't_pay', 't_pay_std', 't_diff', 't_per90', 't_reg8', 't_left', 't_share', 't_month', 't_below', 'options_body', 'split'];
+  document.querySelectorAll('.as-switch button').forEach(b => b.addEventListener('click', () => {
+    window.asState.scheme = b.dataset.scheme;
+    document.querySelectorAll('.as-switch button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    NAMES.forEach(n => dash.draw(n));
+  }));
+
+  const sel = () => { const v = dash.data('variants'); return v.status === 'ok' ? v.data.find(r => r.scheme === window.asState.scheme) : null; };
+  const anyRow = () => { const v = dash.data('variants'); return v.status === 'ok' && v.data.length ? v.data[0] : null; };
+  const text = (name, get) => dash.draw(name, el => {
+    const s = get();
+    el.textContent = s == null ? '—' : s;
+    if (el.dataset.source === 'variants' && el.dataset.field) el.setAttribute('data-where', 'scheme=' + window.asState.scheme);
+  });
+
+  text('avg_people', () => { const r = anyRow(); return r && one(r.avg_people); });
+  text('rev_class', () => { const r = anyRow(); return r && rub(r.revenue_class); });
+  text('v_name', () => { const r = sel(); return r && r.short; });
+  text('v_pay', () => { const r = sel(); return r && rub(r.pay_class); });
+  text('v_diff_pct', () => { const r = sel(); return r && spct(r.diff_pct); });
+  text('v_left', () => { const r = sel(); return r && rub(r.left_class); });
+  text('t_pay', () => { const r = sel(); return r && rub(r.pay_class); });
+  text('t_pay_std', () => { const r = sel(); return r && rub(r.pay_std); });
+  text('t_diff', () => { const r = sel(); return r && (srub(r.diff) + ' (' + spct(r.diff_pct) + ')'); });
+  text('t_per90', () => { const r = sel(); return r && rub(r.per90); });
+  text('t_reg8', () => { const r = sel(); return r && rub(r.reg8); });
+  text('t_left', () => { const r = sel(); return r && rub(r.left_class); });
+  text('t_share', () => { const r = sel(); return r && pct(r.share); });
+  text('t_month', () => { const r = sel(); return r && srub(r.month_diff); });
+  text('t_below', () => { const r = sel(); return r && String(r.below); });
+  dash.draw('v_formula', el => {
+    const d = dash.data('ashtanga_rates');
+    const r = d.status === 'ok' ? d.data.find(x => x.scheme === window.asState.scheme) : null;
+    el.setAttribute('data-where', 'scheme=' + window.asState.scheme);
+    el.textContent = r ? r.label : '—';
+  });
+})();
+</script>
+
+<script>
+(() => {
+  const { rub, srub, pct, spct, one } = window.asFmt;
+  const css = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+  const fail = el => { el.replaceChildren(); const d = document.createElement('div'); d.className = 'as-fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
+  function tip(box) { let t = box.querySelector('.as-tip'); if (!t) { t = document.createElement('div'); t.className = 'as-tip'; t.hidden = true; box.appendChild(t); } return t; }
+  function fillTip(t, head, rows) {
+    t.replaceChildren();
+    const h = document.createElement('div'); h.className = 'as-tip-h'; h.textContent = head; t.appendChild(h);
+    for (const [c, name, val] of rows) { const r = document.createElement('div'); r.className = 'as-tip-r'; if (c) { const i = document.createElement('i'); i.style.background = c; r.appendChild(i); } const s = document.createElement('span'); s.textContent = name + ': ' + val; r.appendChild(s); t.appendChild(r); }
+  }
+  function place(box, t, x, y) { t.hidden = false; t.style.left = Math.max(0, Math.min(box.clientWidth - t.offsetWidth, x + 12)) + 'px'; t.style.top = Math.max(0, y - t.offsetHeight - 8) + 'px'; }
+  function axis(g) { g.attr('font-size', null).attr('font-family', null); g.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)'); g.selectAll('.domain,line').attr('stroke', 'var(--cds-chart-axis)'); }
+  function measure(svg, ts) { const t = svg.append('text').style('font-size', 'var(--cds-font-size-caption)'); let w = 0; for (const s of ts) { t.text(s); w = Math.max(w, t.node().getComputedTextLength()); } t.remove(); return w; }
+  const thou = v => v >= 1000 ? (v / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + ' тыс.' : String(v);
+
+  dash.draw('options_body', tb => {
+    const v = dash.data('variants'); tb.replaceChildren();
+    if (v.status !== 'ok') return;
+    for (const r of v.data) {
+      const tr = document.createElement('tr'); tr.dataset.key = r.scheme;
+      if (r.scheme === window.asState.scheme) tr.className = 'as-sel';
+      const cells = [r.label, rub(r.pay_class), r.scheme === 'std' ? '—' : spct(r.diff_pct), rub(r.per90), rub(r.left_class), pct(r.share), r.scheme === 'std' ? '—' : srub(r.month_diff), String(r.below)];
+      cells.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; if (i === 7 && r.below > 0) td.className = 'as-bad'; tr.appendChild(td); });
+      tb.appendChild(tr);
+    }
+  });
+
+  dash.draw('attendance_body', tb => {
+    const a = dash.data('attendance'); tb.replaceChildren();
+    if (a.status !== 'ok') return;
+    for (const r of a.data) {
+      const tr = document.createElement('tr'); if (r.teacher === 'Все преподаватели') tr.className = 'as-total';
+      [r.teacher, String(r.classes_sep), one(r.avg_sep), String(r.classes_oct), one(r.avg_oct), String(r.small)].forEach(c => { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+      tb.appendChild(tr);
+    }
+  });
+
+  dash.draw('split', box => {
+    const v = dash.data('variants');
+    box.replaceChildren();
+    if (v.status === 'error') return fail(box);
+    if (v.status !== 'ok') return;
+    const rows = v.data, W = Math.max(280, box.clientWidth), rowH = 44, H = rows.length * rowH + 8;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Как делится выручка класса');
+    const ml = Math.min(W * 0.42, measure(svg, rows.map(r => r.short)) + 12);
+    const rev = rows[0].revenue_class;
+    const x = d3.scaleLinear([0, rev], [ml, W - 4]);
+    const acc = css(box, '--as-acc'), stu = css(box, '--as-studio');
+    const g = svg.selectAll('g.r').data(rows).join('g').attr('transform', (d, i) => `translate(0,${i * rowH + 6})`);
+    g.append('text').attr('x', 0).attr('y', 20).attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)')
+      .style('font-weight', d => d.scheme === window.asState.scheme ? '600' : '400').text(d => d.short);
+    g.append('rect').attr('x', ml).attr('y', 6).attr('height', 26).attr('rx', 4).attr('width', d => x(d.pay_class) - ml).attr('fill', acc)
+      .attr('opacity', d => d.scheme === window.asState.scheme ? 1 : 0.55);
+    g.append('rect').attr('x', d => x(d.pay_class) + 2).attr('y', 6).attr('height', 26).attr('rx', 4).attr('width', d => Math.max(0, W - 4 - x(d.pay_class) - 2)).attr('fill', stu)
+      .attr('opacity', d => d.scheme === window.asState.scheme ? 1 : 0.55);
+    g.append('text').attr('x', ml + 8).attr('y', 23).attr('fill', '#fff').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', '600').text(d => pct(d.share));
+    const t = tip(box);
+    g.append('rect').attr('x', 0).attr('width', W).attr('y', 0).attr('height', rowH).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => { fillTip(t, d.label, [[acc, 'Преподавателю', rub(d.pay_class)], [stu, 'Студии', rub(d.left_class)], [null, 'Выручка класса', rub(d.revenue_class)]]); const [px, py] = d3.pointer(ev, box); place(box, t, px, py); })
+      .on('mouseleave', () => { t.hidden = true; });
+  });
+
+  const SERIES = [
+    { key: 'std', name: 'Стандарт', color: '--as-std', op: 1 },
+    { key: 'per400', name: '400 ₽/чел', color: '--as-acc', op: 0.55 },
+    { key: 'per450min', name: '450 ₽/чел + мин. 2 500', color: '--as-acc', op: 1 },
+    { key: 'per500', name: '500 ₽/чел', color: '--as-green', op: 1 }
+  ];
+  dash.draw('size', box => {
+    const gr = dash.data('grid'), sz = dash.data('sizes');
+    box.replaceChildren();
+    if (gr.status === 'error' || sz.status === 'error') return fail(box);
+    if (gr.status !== 'ok' || sz.status !== 'ok') return;
+    const rows = gr.data, W = Math.max(280, box.clientWidth), H = 260, bottom = 26, histH = 44;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Оплата за класс по размеру группы');
+    const yMax = d3.max(rows, d => Math.max(...SERIES.map(s => d[s.key])));
+    const y = d3.scaleLinear([0, yMax], [H - bottom, 10]).nice();
+    const ticks = y.ticks(4);
+    const ml = measure(svg, ticks.map(thou)) + 10, mr = measure(svg, ['16 чел.']) / 2 + 4;
+    const x = d3.scaleLinear([1, 16], [ml + 8, W - mr]);
+    svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', ml).attr('x2', W - mr).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+    const gy = svg.append('g').attr('transform', `translate(${ml - 4},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat(thou).tickSize(0)); axis(gy); gy.select('.domain').remove();
+    const gx = svg.append('g').attr('transform', `translate(0,${H - bottom})`).call(d3.axisBottom(x).tickValues([1, 4, 8, 12, 16]).tickSize(0).tickPadding(8).tickFormat(v => v + ' чел.')); axis(gx);
+    const hy = d3.scaleLinear([0, d3.max(sz.data, d => d.classes)], [0, histH]);
+    const bw = Math.min(18, (x(2) - x(1)) * 0.6);
+    svg.append('g').selectAll('rect').data(sz.data.filter(d => d.people <= 16)).join('rect')
+      .attr('x', d => x(d.people) - bw / 2).attr('width', bw).attr('y', d => H - bottom - hy(d.classes)).attr('height', d => hy(d.classes)).attr('rx', 3)
+      .attr('fill', 'var(--cds-chart-muted)').attr('opacity', 0.45);
+    const line = d3.line().x(d => x(d.people));
+    for (const s of SERIES) {
+      const w = s.key === window.asState.scheme ? 3 : 2;
+      svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', css(box, s.color)).attr('stroke-opacity', s.op).attr('stroke-width', w).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('d', line.y(d => y(d[s.key])));
+    }
+    const t = tip(box);
+    const rule = svg.append('line').attr('y1', 10).attr('y2', H - bottom).attr('stroke', 'var(--cds-chart-axis)').attr('opacity', 0);
+    svg.append('rect').attr('x', ml).attr('width', W - mr - ml).attr('y', 0).attr('height', H - bottom).attr('fill', 'transparent')
+      .on('mousemove', ev => {
+        const [mx] = d3.pointer(ev); const n = Math.max(1, Math.min(16, Math.round(x.invert(mx)))); const d = rows[n - 1];
+        const cnt = (sz.data.find(s => s.people === n) || { classes: 0 }).classes;
+        rule.attr('x1', x(n)).attr('x2', x(n)).attr('opacity', 1);
+        fillTip(t, n + ' чел. · классов: ' + cnt, SERIES.map(s => [css(box, s.color), s.name, rub(d[s.key])]));
+        const [px, py] = d3.pointer(ev, box); place(box, t, px, py);
+      })
+      .on('mouseleave', () => { t.hidden = true; rule.attr('opacity', 0); });
+  });
+
+  dash.draw('payments', box => {
+    const p = dash.data('ashtanga_payments');
+    box.replaceChildren();
+    if (p.status === 'error') return fail(box);
+    if (p.status !== 'ok') return;
+    const rows = p.data.map(r => ({ ...r, visits: Number(r.visits), rub_per_visit: Number(r.rub_per_visit) })).sort((a, b) => b.visits - a.visits);
+    const total = d3.sum(rows, r => r.visits);
+    const W = Math.max(280, box.clientWidth), rowH = 26, H = rows.length * rowH + 4;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Посещения по основаниям оплаты');
+    const short = s => s.length > 26 ? s.slice(0, 25) + '…' : s;
+    const ml = Math.min(W * 0.45, measure(svg, rows.map(r => short(r.payment_type))) + 10);
+    const mr = measure(svg, ['210 · 52 % · 1 408 ₽']) + 8;
+    const x = d3.scaleLinear([0, d3.max(rows, r => r.visits)], [ml, W - mr]);
+    const acc = css(box, '--as-acc');
+    const g = svg.selectAll('g').data(rows).join('g').attr('transform', (d, i) => `translate(0,${i * rowH})`);
+    g.append('text').attr('x', 0).attr('y', 17).attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(d => short(d.payment_type));
+    g.append('rect').attr('x', ml).attr('y', 5).attr('height', 16).attr('rx', 3).attr('width', d => Math.max(2, x(d.visits) - ml))
+      .attr('fill', d => d.rub_per_visit === 0 ? 'var(--cds-chart-muted)' : acc).attr('opacity', (d, i) => i === 0 ? 1 : 0.6);
+    g.append('text').attr('x', d => x(d.visits) + 6).attr('y', 17).attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').style('font-variant-numeric', 'tabular-nums')
+      .text(d => d.visits + ' · ' + pct(d.visits / total) + ' · ' + (d.rub_per_visit ? rub(d.rub_per_visit) : '0 ₽'));
+    const t = tip(box);
+    g.append('rect').attr('width', W).attr('height', rowH).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => { fillTip(t, d.payment_type, [[null, 'Посещений', d.visits + ' (' + pct(d.visits / total) + ')'], [null, 'За посещение', rub(d.rub_per_visit)], [null, 'Как посчитано', d.method]]); const [px, py] = d3.pointer(ev, box); place(box, t, px, py); })
+      .on('mouseleave', () => { t.hidden = true; });
+  });
+})();
+</script>
+
+</div><script>window.__dashReady && window.__dashReady();</script></body></html>
