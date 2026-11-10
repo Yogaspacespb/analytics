@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Семинар Баринова — итоги</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root {
+    --ys-beige: #FDF6F0;
+    --ys-beige-mid: #F0EAE4;
+    --ys-beige-dark: #D8D1CC;
+    --ys-green: #5C6937;
+    --ys-green-pastel: #AEB49C;
+    --ys-green-pastel-dark: #7C8760;
+    --ys-orange: #F0803B;
+    --ys-orange-pastel: #FDE6D9;
+    --ys-orange-pastel-dark: #CB6D33;
+    --ys-grey-dark: #A5A09D;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ys-beige); font-family:'Montserrat',sans-serif; color:var(--ys-green); }
+  .wrap { display:flex; flex-direction:column; gap:28px; padding:28px 20px 48px; max-width:960px; margin:0 auto; }
+  .brandbar { display:flex; align-items:center; gap:10px; }
+  .brandbar .mark { width:10px; height:10px; border-radius:50%; background:var(--ys-orange); }
+  .brandbar .word { font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--ys-green); }
+  .eyebrow { font-weight:600; font-size:12px; color:var(--ys-orange-pastel-dark); text-transform:uppercase; letter-spacing:.08em; }
+  h1 { font:700 30px/1.15 'Montserrat',sans-serif; color:var(--ys-green); margin:6px 0 0; }
+  h2 { font:600 17px/1.3 'Montserrat',sans-serif; color:var(--ys-green); margin:0 0 14px; }
+  .lede { font-size:15px; color:var(--ys-green-pastel-dark); margin:0; max-width:62ch; line-height:1.5; }
+  .tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  @media (max-width:640px){ .tiles{ grid-template-columns:repeat(2,1fr);} body{overflow-x:hidden;} }
+  .tile { background:#fff; border:1px solid var(--ys-beige-dark); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:4px; }
+  .tile .label { font-size:11px; font-weight:600; color:var(--ys-grey-dark); text-transform:uppercase; letter-spacing:.04em; }
+  .tile .value { font:700 26px/1.1 'Montserrat',sans-serif; color:var(--ys-orange); font-variant-numeric:tabular-nums; }
+  .tile .sub { font-size:12px; color:var(--ys-grey-dark); }
+  .panel { background:#fff; border:1px solid var(--ys-beige-dark); border-radius:14px; padding:22px; }
+  .chart-box { min-height:220px; }
+  .bar-row text { fill:var(--ys-green); font-size:12px; font-family:'Montserrat',sans-serif; }
+  .callout { font-size:15px; color:var(--ys-green); margin:0; }
+  .callout b { color:var(--ys-orange-pastel-dark); font-variant-numeric:tabular-nums; }
+  table.ptable { width:100%; border-collapse:collapse; font-size:14px; }
+  table.ptable th, table.ptable td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--ys-beige-mid); }
+  table.ptable th { color:var(--ys-grey-dark); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; color:var(--ys-green); }
+  .tbl-wrap { overflow-x:auto; }
+  details { font-size:13px; color:var(--ys-green-pastel-dark); }
+  details summary { cursor:pointer; color:var(--ys-green); font-weight:600; }
+  details.ptable-details summary { font:600 17px/1.3 'Montserrat',sans-serif; color:var(--ys-green); font-size:17px; }
+  details.ptable-details summary span { color:var(--ys-orange-pastel-dark); font-variant-numeric:tabular-nums; }
+  details.ptable-details[open] summary { margin-bottom:14px; }
+
+  .findings { display:flex; flex-direction:column; gap:14px; }
+  .finding { display:flex; gap:16px; background:#fff; border:1px solid var(--ys-beige-dark); border-radius:14px; padding:18px 20px; }
+  .finding .num { flex:none; width:34px; height:34px; border-radius:50%; background:var(--ys-green); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .finding .body h3 { margin:0 0 4px; font:600 15px/1.3 'Montserrat',sans-serif; color:var(--ys-green); }
+  .finding .body p { margin:0; font-size:14px; line-height:1.55; color:var(--ys-green-pastel-dark); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brandbar"><span class="mark"></span><span class="word">Yoga Space · Чернышевская</span></div>
+  <div>
+    <div class="eyebrow">Илья Баринов · «Конструктор йоги» · 1 день</div>
+    <h1>Итоги семинара</h1>
+    <p class="lede" id="summary">—</p>
+  </div>
+
+  <div class="tiles">
+    <div class="tile">
+      <div class="label">Участников</div>
+      <div class="value" id="n-participants">—</div>
+      <div class="sub">из них <span id="n-new">—</span> новых</div>
+    </div>
+    <div class="tile">
+      <div class="label">Выручка (оплачено)</div>
+      <div class="value" id="revenue">—</div>
+      <div class="sub">нал. <span id="revenue-cash">—</span> + карта <span id="revenue-card">—</span></div>
+    </div>
+    <div class="tile">
+      <div class="label">Доля студии</div>
+      <div class="value" id="studio-share">—</div>
+      <div class="sub">50% по факту</div>
+    </div>
+    <div class="tile">
+      <div class="label">Доля Ильи</div>
+      <div class="value" id="teacher-share">—</div>
+      <div class="sub">50% по факту</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Состав группы</h2>
+    <div class="chart-box" id="segments-chart"></div>
+  </div>
+
+  <div class="panel">
+    <p class="callout" id="conversion-callout">—</p>
+  </div>
+
+  <div class="panel">
+    <details class="ptable-details">
+      <summary>Список участников (<span id="n-participants-2">—</span> чел.)</summary>
+      <div class="tbl-wrap">
+        <table class="ptable">
+          <thead>
+            <tr>
+              <th>Имя</th>
+              <th>Категория</th>
+              <th>Статус</th>
+              <th>Оплата</th>
+              <th>Способ</th>
+            </tr>
+          </thead>
+          <tbody id="ptable-body"></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <div class="panel">
+    <h2>Главные выводы</h2>
+    <div class="findings">
+      <div class="finding">
+        <div class="num">1</div>
+        <div class="body">
+          <h3>Цена оказалась высокой для петербургского рынка</h3>
+          <p>4000–7000 ₽ за практику заметно выше диапазона 3000–3500 ₽, в котором обычно продаются семинары с приглашёнными преподавателями в СПб. Даже при высоком интересе к теме такая цена сама по себе сужает число готовых прийти.</p>
+        </div>
+      </div>
+      <div class="finding">
+        <div class="num">2</div>
+        <div class="body">
+          <h3>Формат «1 день» вместо двух — рабочее решение</h3>
+          <p>Переход с двухдневного формата на однодневный себя оправдал: мы избежали типичного провала доходимости на второй день и собрали полноценную группу в 11 человек за один заход.</p>
+        </div>
+      </div>
+      <div class="finding">
+        <div class="num">3</div>
+        <div class="body">
+          <h3>Известность преподавателя в йога-сообществе не конвертируется в отклик нашей аудитории</h3>
+          <p>Имя Ильи Баринова хорошо узнаваемо среди практикующих и коллег, но для постоянной аудитории студии это не стало решающим аргументом — известность «внутри цеха» и интерес собственных клиентов работают по разным законам.</p>
+        </div>
+      </div>
+      <div class="finding">
+        <div class="num">4</div>
+        <div class="body">
+          <h3>Сложный формат сузил воронку уже на старте</h3>
+          <p>Творческий, импровизационный подход к практике плюс продолжающий уровень — ниша внутри ниши. Часть потенциально заинтересованных отсеялась ещё на этапе «не уверен(а), что мой уровень подходит», до всякого разговора о цене.</p>
+        </div>
+      </div>
+      <div class="finding">
+        <div class="num">5</div>
+        <div class="body">
+          <h3>Анонсы и реклама дались тяжелее, чем сама организация</h3>
+          <p>Договориться о продвижении мероприятия оказалось сложнее, чем об условиях гонорара: обе стороны считали, что партнёр вкладывается в анонсы недостаточно. На будущее стоит заранее фиксировать, кто и когда публикует, а не полагаться на обоюдное понимание «само собой разумеющегося».</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Контекст переговоров и методика</summary>
+    <p>Формат и гонорар обсуждались отдельно: исходный запрос Ильи — 2 дня, фикс 40 000 ₽ до 10 чел. либо 2/3 от сборов свыше; финальное предложение студии — 1 день, фикс 20 000 ₽ до 10 чел. либо 45% от сборов свыше. По факту прошёл 1 день, набралось 11 человек, и стороны поделили сборы 50/50 — это чуть щедрее к Илье, чем предложенные студией 45%, но заметно выгоднее студии, чем исходный запрос Ильи (2/3).</p>
+    <p>Стоимость по прайсу без скидок составила 45 000 ₽; фактически оплачено 41 000 ₽ — одному участнику была предоставлена скидка. Доли студии и Ильи рассчитаны от фактически оплаченного.</p>
+  </details>
+</div>
+
+<script>
+const PARTICIPANTS = [
+  { name: "Александра Мухортова", category: "Новый", status: "нет допродажи", pay: 4000, method: "Карта" },
+  { name: "Быченкова Вера", category: "Новый", status: "нет допродажи", pay: 3500, method: "Карта" },
+  { name: "Грибоношко Татьяна", category: "Новый", status: "нет допродажи", pay: 4000, method: "Наличные" },
+  { name: "Гулевич Дмитрий", category: "Наш", status: "есть абонемент", pay: 3500, method: "Карта" },
+  { name: "Екатерина", category: "Новый", status: "нет допродажи", pay: 4000, method: "Карта" },
+  { name: "Жуланова Анна", category: "Наш", status: "не дошла", pay: 3500, method: "Карта" },
+  { name: "Коханская Валерия", category: "Преподаватель", status: "гостевой визит", pay: 3500, method: "Карта" },
+  { name: "Приветкина Анастасия", category: "Наш", status: "есть абонемент", pay: 3500, method: "Карта" },
+  { name: "Савельева Альфия", category: "Новый", status: "нет допродажи", pay: 4000, method: "Карта" },
+  { name: "Смирнова Татьяна", category: "Новый", status: "нет допродажи", pay: 3500, method: "Карта" },
+  { name: "Чистякова Светлана", category: "Новый", status: "купила абонемент 10", pay: 4000, method: "Карта" },
+];
+
+const fmtRub = (v) => new Intl.NumberFormat('ru-RU').format(Math.round(v)) + ' ₽';
+const fmtNum = (v) => new Intl.NumberFormat('ru-RU').format(v);
+
+const total = PARTICIPANTS.reduce((s,r)=>s+r.pay,0);
+const cash = PARTICIPANTS.filter(r=>r.method==='Наличные').reduce((s,r)=>s+r.pay,0);
+const card = PARTICIPANTS.filter(r=>r.method==='Карта').reduce((s,r)=>s+r.pay,0);
+const nNew = PARTICIPANTS.filter(r=>r.category==='Новый').length;
+const newRows = PARTICIPANTS.filter(r=>r.category==='Новый');
+const converted = newRows.filter(r=>r.status!=='нет допродажи').length;
+
+document.getElementById('summary').textContent = `Прошёл 1 день семинара — ${PARTICIPANTS.length} участников, ${nNew} из них новые. Выручку ${fmtRub(total)} поделили с преподавателем 50/50.`;
+document.getElementById('n-participants').textContent = fmtNum(PARTICIPANTS.length);
+document.getElementById('n-participants-2').textContent = fmtNum(PARTICIPANTS.length);
+document.getElementById('n-new').textContent = fmtNum(nNew);
+document.getElementById('revenue').textContent = fmtRub(total);
+document.getElementById('revenue-cash').textContent = fmtRub(cash);
+document.getElementById('revenue-card').textContent = fmtRub(card);
+document.getElementById('studio-share').textContent = fmtRub(total*0.5);
+document.getElementById('teacher-share').textContent = fmtRub(total*0.5);
+
+const ratePct = newRows.length ? Math.round((converted/newRows.length)*100) : 0;
+document.getElementById('conversion-callout').innerHTML =
+  `Среди новых клиентов <b>${converted} из ${newRows.length}</b> купили абонемент после семинара — конверсия <b>${ratePct}%</b>.`;
+
+const tbody = document.getElementById('ptable-body');
+PARTICIPANTS.forEach(r => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${r.name}</td><td>${r.category}</td><td>${r.status}</td><td class="num">${fmtRub(r.pay)}</td><td>${r.method}</td>`;
+  tbody.appendChild(tr);
+});
+
+const SEGMENTS = [
+  { label: 'Новые — без допродажи', test: r => r.category==='Новый' && r.status==='нет допродажи' },
+  { label: 'Новые — купили абонемент', test: r => r.category==='Новый' && r.status!=='нет допродажи' },
+  { label: 'Постоянные', test: r => r.category==='Наш' && r.status==='есть абонемент' },
+  { label: 'Постоянные — не дошли', test: r => r.category==='Наш' && r.status==='не дошла' },
+  { label: 'Преподаватель', test: r => r.category==='Преподаватель' },
+].map(s => ({ label: s.label, count: PARTICIPANTS.filter(s.test).length }));
+
+function drawSegments(){
+  const el = document.getElementById('segments-chart');
+  el.innerHTML = '';
+  const width = el.clientWidth || 600;
+  const barH = 34, gap = 14;
+  const height = SEGMENTS.length * (barH+gap);
+  const margin = { top: 8, right: 56, bottom: 8, left: 190 };
+  const innerW = Math.max(40, width - margin.left - margin.right);
+  const maxV = Math.max(1, d3.max(SEGMENTS, d=>d.count));
+  const x = d3.scaleLinear().domain([0, maxV]).range([0, innerW]);
+  const colors = ['#F0803B','#5C6937','#AEB49C','#A5A09D','#CB6D33'];
+  const svg = d3.select(el).append('svg').attr('width','100%').attr('viewBox', `0 0 ${width} ${height}`).attr('height', height).style('overflow','visible');
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  const rows = g.selectAll('g.bar-row').data(SEGMENTS).join('g')
+    .attr('class','bar-row')
+    .attr('transform', (d,i) => `translate(0,${i*(barH+gap)})`);
+  rows.append('text')
+    .attr('x', -10).attr('y', barH/2).attr('dy','0.32em').attr('text-anchor','end')
+    .text(d => d.label);
+  rows.append('rect')
+    .attr('x', 0).attr('y', 2).attr('height', barH-4)
+    .attr('rx', 4)
+    .attr('width', d => x(d.count))
+    .attr('fill', (d,i) => colors[i % colors.length]);
+  rows.append('text')
+    .attr('x', d => x(d.count) + 8).attr('y', barH/2).attr('dy','0.32em')
+    .attr('fill', '#5C6937')
+    .text(d => d.count);
+}
+drawSegments();
+window.addEventListener('resize', drawSegments);
+</script>
+</body>
+</html>
